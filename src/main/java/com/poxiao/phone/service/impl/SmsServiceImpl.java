@@ -1,5 +1,6 @@
 package com.poxiao.phone.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -15,6 +16,7 @@ import com.poxiao.phone.util.JsonResult;
 import com.poxiao.phone.util.RedisUtil;
 import com.poxiao.phone.util.Result;
 import com.poxiao.phone.util.ResultEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -31,6 +33,7 @@ import java.util.UUID;
  */
 @PropertySource("phone.properties")
 @Service
+@Slf4j
 public class SmsServiceImpl implements SmsService {
     @Value("${sms.accessId}")
     private String accessId;
@@ -77,6 +80,7 @@ public class SmsServiceImpl implements SmsService {
         SendSmsResponse sendSmsResponse = null;
         try {
             sendSmsResponse = send(phone, signName, codeTemplate, smsJson);
+            log.info("获取的短信信息参数为：{}", JSON.toJSONString(sendSmsResponse));
         } catch (ClientException e) {
             e.printStackTrace();
             System.out.println("短信验证码发送失败");
